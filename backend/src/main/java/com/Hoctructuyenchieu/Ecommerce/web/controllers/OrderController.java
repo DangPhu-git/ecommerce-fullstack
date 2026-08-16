@@ -7,7 +7,6 @@ import com.Hoctructuyenchieu.Ecommerce.web.dto.OrderDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +20,8 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/checkout")
-    public ResponseEntity<ApiResponse<Order>> checkout(Authentication authentication, @Valid @RequestBody OrderDto.CreateOrderRequest request) {
+    public ResponseEntity<ApiResponse<Order>> checkout(Authentication authentication,
+            @Valid @RequestBody OrderDto.CreateOrderRequest request) {
         Order order = orderService.checkout(authentication.getName(), request);
         return ResponseEntity.ok(ApiResponse.success(order, "Order placed successfully"));
     }
@@ -45,7 +45,8 @@ public class OrderController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<ApiResponse<Order>> updateOrderStatus(@PathVariable Long id, @RequestBody OrderDto.UpdateStatusRequest request) {
+    public ResponseEntity<ApiResponse<Order>> updateOrderStatus(@PathVariable Long id,
+            @RequestBody OrderDto.UpdateStatusRequest request) {
         Order order = orderService.updateOrderStatus(id, request);
         return ResponseEntity.ok(ApiResponse.success(order, "Order status updated"));
     }
