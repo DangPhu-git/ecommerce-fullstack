@@ -11,26 +11,20 @@ import com.Hoctructuyenchieu.Ecommerce.repository.CartRepository;
 import com.Hoctructuyenchieu.Ecommerce.repository.ProductRepository;
 import com.Hoctructuyenchieu.Ecommerce.repository.UserRepository;
 import com.Hoctructuyenchieu.Ecommerce.web.dto.CartDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
 
-    @Autowired
-    private CartRepository cartRepository;
-
-    @Autowired
-    private CartItemRepository cartItemRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     public Cart getOrCreateCart(String username) {
         User user = userRepository.findByUsername(username)

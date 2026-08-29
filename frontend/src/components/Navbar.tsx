@@ -27,58 +27,81 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { itemCount } = useCart();
 
   return (
-    <nav className="glass-nav" style={{ position: 'sticky', top: 0, zIndex: 900, padding: '14px 0' }}>
-      <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
-        {/* Brand Logo */}
+    <nav className="glass-nav" style={{ position: 'sticky', top: 0, zIndex: 900, padding: '16px 0' }}>
+      <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px' }}>
+        {/* Brand Logo with Glow */}
         <div
-          style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', userSelect: 'none' }}
           onClick={() => setActiveView('home')}
         >
           <div style={{
-            width: '42px', height: '42px', borderRadius: '12px',
+            width: '44px', height: '44px', borderRadius: '14px',
             background: 'var(--accent-gradient)', display: 'flex',
-            alignItems: 'center', justifyContent: 'center', fontWeight: '800',
-            fontSize: '1.4rem', color: '#fff', boxShadow: 'var(--shadow-glow)'
+            alignItems: 'center', justifyContent: 'center', fontWeight: '900',
+            fontSize: '1.45rem', color: '#fff', boxShadow: 'var(--shadow-glow)',
+            transform: 'rotate(-4deg)', transition: 'transform 0.3s ease'
           }}>
-            E
+            ⚡
           </div>
           <div>
-            <span style={{ fontSize: '1.35rem', fontWeight: '800', fontFamily: 'var(--font-display)', letterSpacing: '-0.5px' }} className="gradient-text">
+            <span style={{ fontSize: '1.4rem', fontWeight: '800', fontFamily: 'var(--font-display)', letterSpacing: '-0.03em' }} className="gradient-text">
               NeoStore
             </span>
-            <span style={{ display: 'block', fontSize: '0.68rem', color: 'var(--text-dim)', marginTop: '-4px', fontWeight: '600' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.68rem', color: 'var(--text-dim)', letterSpacing: '0.08em', fontWeight: '700' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-emerald)', display: 'inline-block', boxShadow: '0 0 8px #10b981' }} />
               CLOUD POWERED
             </span>
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div style={{ flex: 1, maxWidth: '480px', position: 'relative' }}>
+        {/* Dynamic Search Bar */}
+        <div style={{ flex: 1, maxWidth: '520px', position: 'relative' }}>
+          <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', fontSize: '1.1rem', color: 'var(--text-dim)', pointerEvents: 'none' }}>
+            🔍
+          </span>
           <input
             type="text"
             className="form-input"
-            placeholder="🔍 Tìm kiếm sản phẩm công nghệ, thời trang..."
+            placeholder="Tìm kiếm điện thoại, laptop, thời trang, phụ kiện..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            style={{ borderRadius: 'var(--radius-full)', paddingLeft: '44px', background: 'rgba(15, 23, 42, 0.6)' }}
+            style={{
+              borderRadius: 'var(--radius-full)',
+              paddingLeft: '46px',
+              paddingRight: searchTerm ? '40px' : '16px',
+              background: 'rgba(15, 23, 42, 0.7)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              fontSize: '0.92rem'
+            }}
           />
+          {searchTerm && (
+            <button
+              onClick={() => onSearchChange('')}
+              style={{
+                position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
+                background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '0.9rem'
+              }}
+            >
+              ✕
+            </button>
+          )}
         </div>
 
-        {/* Action Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          {/* Navigation Links */}
+        {/* Action Controls & Navigation */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Navigation Pill Links */}
           <button
             className={`btn ${activeView === 'home' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ borderRadius: 'var(--radius-full)', padding: '8px 16px', fontSize: '0.88rem' }}
+            style={{ borderRadius: 'var(--radius-full)', padding: '9px 18px', fontSize: '0.9rem' }}
             onClick={() => setActiveView('home')}
           >
-            🏠 Trang Chủ
+            🏠 Khám Phá
           </button>
 
           {user && (
             <button
               className={`btn ${activeView === 'orders' ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ borderRadius: 'var(--radius-full)', padding: '8px 16px', fontSize: '0.88rem' }}
+              style={{ borderRadius: 'var(--radius-full)', padding: '9px 18px', fontSize: '0.9rem' }}
               onClick={() => {
                 setActiveView('orders');
                 onOpenOrders();
@@ -91,7 +114,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           {isAdmin && (
             <button
               className={`btn ${activeView === 'admin' ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ borderRadius: 'var(--radius-full)', padding: '8px 16px', fontSize: '0.88rem' }}
+              style={{
+                borderRadius: 'var(--radius-full)', padding: '9px 18px', fontSize: '0.9rem',
+                border: activeView === 'admin' ? 'none' : '1px solid rgba(245, 158, 11, 0.4)',
+                color: activeView === 'admin' ? '#fff' : '#f59e0b'
+              }}
               onClick={() => {
                 setActiveView('admin');
                 onOpenAdmin();
@@ -101,33 +128,37 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Cart Button */}
+          {/* Cart Trigger */}
           <button
             className="btn btn-secondary"
-            style={{ position: 'relative', borderRadius: 'var(--radius-full)', padding: '8px 16px' }}
+            style={{ position: 'relative', borderRadius: 'var(--radius-full)', padding: '9px 18px' }}
             onClick={onOpenCart}
           >
             🛒 Giỏ Hàng
             {itemCount > 0 && (
-              <span className="badge badge-primary" style={{
+              <span className="badge badge-sale" style={{
                 position: 'absolute', top: '-6px', right: '-6px',
-                padding: '2px 8px', fontSize: '0.72rem', background: '#ec4899', color: 'white'
+                padding: '2px 8px', fontSize: '0.72rem', fontWeight: '800'
               }}>
                 {itemCount}
               </span>
             )}
           </button>
 
-          {/* User Account */}
+          {/* User Profile or Login */}
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.04)', padding: '4px 6px 4px 14px', borderRadius: 'var(--radius-full)', border: '1px solid var(--border-glass)' }}>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-main)' }}>{user.fullName || user.username}</div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>{isAdmin ? 'Quản trị viên' : 'Khách hàng'}</div>
+                <div style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-main)', lineHeight: 1.2 }}>
+                  {user.fullName || user.username}
+                </div>
+                <div style={{ fontSize: '0.72rem', color: isAdmin ? 'var(--warning)' : 'var(--text-dim)', fontWeight: '600' }}>
+                  {isAdmin ? '🛡️ Administrator' : '💎 Khách hàng VIP'}
+                </div>
               </div>
               <button
                 className="btn btn-danger"
-                style={{ borderRadius: 'var(--radius-full)', padding: '6px 12px', fontSize: '0.8rem' }}
+                style={{ borderRadius: 'var(--radius-full)', padding: '6px 14px', fontSize: '0.8rem' }}
                 onClick={logout}
               >
                 Đăng Xuất
@@ -136,7 +167,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <button
               className="btn btn-primary"
-              style={{ borderRadius: 'var(--radius-full)', padding: '8px 20px' }}
+              style={{ borderRadius: 'var(--radius-full)', padding: '9px 22px' }}
               onClick={onOpenAuth}
             >
               🔑 Đăng Nhập

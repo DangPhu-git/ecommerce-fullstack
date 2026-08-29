@@ -13,8 +13,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategoryId(Long categoryId);
     List<Product> findByIsFeaturedTrue();
 
-    @Query("SELECT p FROM Product p WHERE " +
-           "(:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
-           "(:categoryId IS NULL OR p.category.id = :categoryId)")
-    List<Product> searchProducts(@Param("keyword") String keyword, @Param("categoryId") Long categoryId);
+    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Product> findByKeyword(@Param("keyword") String keyword);
+
+    @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId")
+    List<Product> findByCategoryId_(@Param("categoryId") Long categoryId);
+
+    @Query("SELECT p FROM Product p WHERE (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND p.category.id = :categoryId")
+    List<Product> findByKeywordAndCategoryId(@Param("keyword") String keyword, @Param("categoryId") Long categoryId);
 }

@@ -5,7 +5,7 @@ import com.Hoctructuyenchieu.Ecommerce.entity.Category;
 import com.Hoctructuyenchieu.Ecommerce.service.CategoryService;
 import com.Hoctructuyenchieu.Ecommerce.web.dto.CategoryRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
+@RequiredArgsConstructor
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Category>>> getAllCategories() {

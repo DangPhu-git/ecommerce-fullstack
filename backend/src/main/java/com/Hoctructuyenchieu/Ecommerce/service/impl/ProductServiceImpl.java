@@ -7,31 +7,37 @@ import com.Hoctructuyenchieu.Ecommerce.entity.Product;
 import com.Hoctructuyenchieu.Ecommerce.repository.CategoryRepository;
 import com.Hoctructuyenchieu.Ecommerce.repository.ProductRepository;
 import com.Hoctructuyenchieu.Ecommerce.web.dto.ProductRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-
+    @Override
     public List<Product> getAllProducts(String keyword, Long categoryId) {
-        if ((keyword != null && !keyword.trim().isEmpty()) || categoryId != null) {
-            return productRepository.searchProducts(keyword, categoryId);
+        String cleanKeyword = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
+        if (cleanKeyword != null && categoryId != null) {
+            return productRepository.findByKeywordAndCategoryId(cleanKeyword, categoryId);
+        } else if (cleanKeyword != null) {
+            return productRepository.findByKeyword(cleanKeyword);
+        } else if (categoryId != null) {
+            return productRepository.findByCategoryId_(categoryId);
         }
         return productRepository.findAll();
     }
 
+    @Override
     public List<Product> getFeaturedProducts() {
         return productRepository.findByIsFeaturedTrue();
     }
 
+    @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));

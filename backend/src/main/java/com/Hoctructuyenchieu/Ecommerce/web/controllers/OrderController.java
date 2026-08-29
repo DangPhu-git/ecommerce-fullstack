@@ -5,7 +5,7 @@ import com.Hoctructuyenchieu.Ecommerce.entity.Order;
 import com.Hoctructuyenchieu.Ecommerce.service.OrderService;
 import com.Hoctructuyenchieu.Ecommerce.web.dto.OrderDto;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
+@RequiredArgsConstructor
 public class OrderController {
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @PostMapping("/checkout")
     public ResponseEntity<ApiResponse<Order>> checkout(Authentication authentication,

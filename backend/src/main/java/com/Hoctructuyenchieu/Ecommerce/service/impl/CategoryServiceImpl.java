@@ -5,16 +5,16 @@ import com.Hoctructuyenchieu.Ecommerce.service.CategoryService;
 import com.Hoctructuyenchieu.Ecommerce.entity.Category;
 import com.Hoctructuyenchieu.Ecommerce.repository.CategoryRepository;
 import com.Hoctructuyenchieu.Ecommerce.web.dto.CategoryRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();

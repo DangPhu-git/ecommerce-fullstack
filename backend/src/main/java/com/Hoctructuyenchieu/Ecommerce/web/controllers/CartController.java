@@ -5,17 +5,17 @@ import com.Hoctructuyenchieu.Ecommerce.entity.Cart;
 import com.Hoctructuyenchieu.Ecommerce.service.CartService;
 import com.Hoctructuyenchieu.Ecommerce.web.dto.CartDto;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/cart")
+@RequiredArgsConstructor
 public class CartController {
 
-    @Autowired
-    private CartService cartService;
+    private final CartService cartService;
 
     @GetMapping
     public ResponseEntity<ApiResponse<Cart>> getCart(Authentication authentication) {

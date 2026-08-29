@@ -7,16 +7,19 @@ const getHeaders = (token?: string | null): HeadersInit => {
     'Content-Type': 'application/json',
   };
   const authToken = token || localStorage.getItem('token');
-  if (authToken) {
+  // Sanitize: don't send 'Bearer null' or 'Bearer undefined'
+  if (authToken && authToken !== 'null' && authToken !== 'undefined') {
     headers['Authorization'] = `Bearer ${authToken}`;
   }
   return headers;
 };
 
 async function handleResponse<T>(res: Response): Promise<T> {
-  const data = await res.json();
+  // Safely parse JSON - handle empty body (e.g. 403 with Content-Length: 0)
+  const text = await res.text();
+  const data = text ? JSON.parse(text) : {};
   if (!res.ok || (data.success !== undefined && !data.success)) {
-    throw new Error(data.message || 'Có lỗi xảy ra!');
+    throw new Error(data.message || `Lỗi ${res.status}: ${res.statusText || 'Có lỗi xảy ra!'}`);
   }
   return data.data !== undefined ? data.data : data;
 }

@@ -1,12 +1,12 @@
 package com.Hoctructuyenchieu.Ecommerce.service.impl;
 
 import com.Hoctructuyenchieu.Ecommerce.service.AuthService;
+import com.Hoctructuyenchieu.Ecommerce.web.dto.AuthDto;
 
 import com.Hoctructuyenchieu.Ecommerce.entity.User;
 import com.Hoctructuyenchieu.Ecommerce.repository.UserRepository;
 import com.Hoctructuyenchieu.Ecommerce.security.jwt.JwtTokenProvider;
-import com.Hoctructuyenchieu.Ecommerce.web.dto.AuthDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,20 +15,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider tokenProvider;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtTokenProvider tokenProvider;
-
+    @Override
     public AuthDto.AuthResponse login(AuthDto.LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -59,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    @Override
     public AuthDto.UserDto register(AuthDto.RegisterRequest registerRequest) {
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
             throw new RuntimeException("Username is already taken!");
@@ -91,6 +87,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    @Override
     public AuthDto.UserDto getCurrentUser(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));

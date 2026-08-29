@@ -7,7 +7,7 @@ import com.Hoctructuyenchieu.Ecommerce.entity.*;
 import com.Hoctructuyenchieu.Ecommerce.repository.OrderRepository;
 import com.Hoctructuyenchieu.Ecommerce.repository.UserRepository;
 import com.Hoctructuyenchieu.Ecommerce.web.dto.OrderDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,16 +17,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CartService cartService;
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final CartService cartService;
 
     @Transactional
     public Order checkout(String username, OrderDto.CreateOrderRequest request) {
