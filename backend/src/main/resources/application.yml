@@ -3,11 +3,10 @@ spring:
     name: ecommerce
 
   config:
-    # Bắt buộc Spring Boot phải nạp file .env ở thư mục gốc trước
+    # Load .env locally (optional - will be skipped on Render where env vars are set directly)
     import: optional:file:backend/.env[.properties]
-    
+
   datasource:
-    # Lúc này Spring đã hiểu các biến trong file .env
     url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
@@ -19,8 +18,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+    show-sql: ${SHOW_SQL:false}
 
     
 server:
-  port: 8080
+  port: ${PORT:8080}
