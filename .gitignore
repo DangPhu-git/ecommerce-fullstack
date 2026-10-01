@@ -60,3 +60,4 @@ build/
 backend/.env
 .agent
 .agent/
+/.agents
