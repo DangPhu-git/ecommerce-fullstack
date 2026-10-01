@@ -23,3 +23,13 @@ spring:
     
 server:
   port: ${PORT:8080}
+
+app:
+  jwt:
+    # Override JWT_SECRET on Render dashboard (min 32 chars)
+    secret: ${JWT_SECRET:EcommerceSecretKeyForJWTAuthSuperSecureKey1234567890}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 hours
+  cors:
+    # Override ALLOWED_ORIGINS on Render dashboard (comma-separated)
+    # Example: http://localhost:5173,https://neostore.onrender.com
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000}
