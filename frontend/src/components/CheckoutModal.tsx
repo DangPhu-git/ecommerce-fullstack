@@ -30,7 +30,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!shippingAddress || !phone || !recipientName) {
-      setError('Vui lòng điền đầy đủ thông tin người nhận và địa chỉ giao hàng.');
+      setError('Vui lòng điền đầy đủ họ tên, số điện thoại và địa chỉ nhận hàng.');
       return;
     }
 
@@ -47,7 +47,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
       await fetchCart();
       onSuccess();
     } catch (err: any) {
-      setError(err.message || 'Đặt hàng thất bại');
+      setError(err.message || 'Đặt hàng thất bại. Vui lòng thử lại.');
     } finally {
       setLoading(false);
     }
@@ -55,19 +55,44 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" style={{ maxWidth: '680px', padding: '32px' }} onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '16px' }}>
+      <div
+        className="modal-content"
+        style={{ maxWidth: '640px', padding: '32px' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '20px',
+            borderBottom: '1px solid var(--border-subtle)',
+            paddingBottom: '16px',
+          }}
+        >
           <div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: '800' }}>💳 Thông Tin Đặt Hàng & Thanh Toán</h2>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-dim)', marginTop: '2px' }}>Giao hàng bảo đảm, bảo mật tuyệt đối</p>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+              Thông tin đặt hàng & thanh toán
+            </h2>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+              Kiểm tra thông tin giao nhận trước khi xác nhận đơn hàng
+            </p>
           </div>
           <button
             onClick={onClose}
+            aria-label="Đóng cửa sổ"
             style={{
-              width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.06)',
-              border: '1px solid var(--border-glass)', color: 'var(--text-muted)', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
+              width: '30px',
+              height: '30px',
+              borderRadius: 'var(--radius-xs)',
+              background: 'var(--bg-subtle)',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             ✕
@@ -75,104 +100,138 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
         </div>
 
         {error && (
-          <div style={{ background: 'var(--danger-bg)', border: '1px solid rgba(244,63,94,0.3)', color: '#fb7185', padding: '10px 14px', borderRadius: 'var(--radius-sm)', marginBottom: '18px', fontSize: '0.88rem' }}>
-            ⚠️ {error}
+          <div
+            style={{
+              background: 'var(--color-danger-soft)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              color: '#f87171',
+              padding: '10px 14px',
+              borderRadius: 'var(--radius-sm)',
+              marginBottom: '18px',
+              fontSize: '0.85rem',
+            }}
+          >
+            {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
             <div className="form-group">
-              <label className="form-label">Họ và tên người nhận *</label>
+              <label className="form-label">Người nhận hàng *</label>
               <input
                 type="text"
                 className="form-input"
                 value={recipientName}
                 onChange={(e) => setRecipientName(e.target.value)}
-                placeholder="Nguyễn Văn An"
+                placeholder="Họ và tên người nhận"
                 required
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Số điện thoại liên hệ *</label>
+              <label className="form-label">Số điện thoại *</label>
               <input
                 type="text"
                 className="form-input"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="0912 345 678"
+                placeholder="Số điện thoại liên lạc"
                 required
               />
             </div>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Địa chỉ giao hàng cụ thể *</label>
+            <label className="form-label">Địa chỉ nhận hàng *</label>
             <input
               type="text"
               className="form-input"
               value={shippingAddress}
               onChange={(e) => setShippingAddress(e.target.value)}
-              placeholder="Số nhà, tên đường, Phường/Xã, Quận/Huyện, Tỉnh/Thành phố"
+              placeholder="Số nhà, đường phố, phường/xã, quận/huyện, tỉnh/thành phố"
               required
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Ghi chú cho đơn hàng</label>
+            <label className="form-label">Ghi chú giao hàng (tùy chọn)</label>
             <textarea
               className="form-textarea"
               rows={2}
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="VD: Giao hàng vào giờ hành chính, gọi trước khi giao..."
+              placeholder="Thời gian nhận hàng hoặc chỉ dẫn cho shipper..."
             />
           </div>
 
           {/* Payment Method Cards */}
           <div className="form-group">
-            <label className="form-label">Chọn phương thức thanh toán</label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+            <label className="form-label">Phương thức thanh toán</label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div
                 style={{
-                  padding: '16px', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
-                  border: paymentMethod === 'COD' ? '2px solid var(--primary-500)' : '1px solid var(--border-glass)',
-                  background: paymentMethod === 'COD' ? 'rgba(99, 102, 241, 0.15)' : 'rgba(15, 23, 42, 0.6)',
-                  transition: 'all 0.2s ease', display: 'flex', alignItems: 'center', gap: '12px'
+                  padding: '14px',
+                  borderRadius: 'var(--radius-sm)',
+                  cursor: 'pointer',
+                  border: paymentMethod === 'COD' ? '1px solid var(--accent-primary)' : '1px solid var(--border-subtle)',
+                  background: paymentMethod === 'COD' ? 'var(--accent-soft)' : 'var(--bg-subtle)',
+                  transition: 'all 0.15s ease',
                 }}
                 onClick={() => setPaymentMethod('COD')}
               >
-                <div style={{ fontSize: '1.6rem' }}>💵</div>
-                <div>
-                  <div style={{ fontWeight: '700', fontSize: '0.92rem' }}>Thanh Toán COD</div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Trả tiền mặt khi nhận hàng</div>
+                <div style={{ fontWeight: 600, fontSize: '0.88rem', color: paymentMethod === 'COD' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                  Thanh toán khi nhận (COD)
+                </div>
+                <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                  Tiền mặt khi kiểm tra hàng
                 </div>
               </div>
 
               <div
                 style={{
-                  padding: '16px', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
-                  border: paymentMethod === 'BANK_TRANSFER' ? '2px solid var(--primary-500)' : '1px solid var(--border-glass)',
-                  background: paymentMethod === 'BANK_TRANSFER' ? 'rgba(99, 102, 241, 0.15)' : 'rgba(15, 23, 42, 0.6)',
-                  transition: 'all 0.2s ease', display: 'flex', alignItems: 'center', gap: '12px'
+                  padding: '14px',
+                  borderRadius: 'var(--radius-sm)',
+                  cursor: 'pointer',
+                  border: paymentMethod === 'BANK_TRANSFER' ? '1px solid var(--accent-primary)' : '1px solid var(--border-subtle)',
+                  background: paymentMethod === 'BANK_TRANSFER' ? 'var(--accent-soft)' : 'var(--bg-subtle)',
+                  transition: 'all 0.15s ease',
                 }}
                 onClick={() => setPaymentMethod('BANK_TRANSFER')}
               >
-                <div style={{ fontSize: '1.6rem' }}>🏦</div>
-                <div>
-                  <div style={{ fontWeight: '700', fontSize: '0.92rem' }}>Chuyển Khoản Ngân Hàng</div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Quét mã QR 24/7 tức thì</div>
+                <div style={{ fontWeight: 600, fontSize: '0.88rem', color: paymentMethod === 'BANK_TRANSFER' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                  Chuyển khoản QR
+                </div>
+                <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                  Xác nhận tự động 24/7
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Total & Submit button */}
-          <div style={{ marginTop: '26px', borderTop: '1px solid var(--border-glass)', paddingTop: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+          {/* Total & Submit */}
+          <div
+            style={{
+              marginTop: '24px',
+              borderTop: '1px solid var(--border-subtle)',
+              paddingTop: '18px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '14px',
+            }}
+          >
             <div>
-              <span style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>Tổng thanh toán đơn hàng:</span>
-              <div style={{ fontSize: '1.6rem', fontWeight: '900', color: 'var(--text-main)' }}>
+              <span style={{ fontSize: '0.84rem', color: 'var(--text-muted)' }}>Tổng thanh toán:</span>
+              <div
+                style={{
+                  fontSize: '1.45rem',
+                  fontWeight: 700,
+                  color: 'var(--text-primary)',
+                  fontFamily: 'var(--font-heading)',
+                }}
+              >
                 {formatVND(totalPrice)}
               </div>
             </div>
@@ -181,9 +240,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
               type="submit"
               className="btn btn-primary"
               disabled={loading}
-              style={{ padding: '14px 32px', borderRadius: 'var(--radius-md)', fontWeight: '700', fontSize: '1.05rem' }}
+              style={{ padding: '12px 28px', fontSize: '0.92rem' }}
             >
-              {loading ? '⏳ Đang Xử Lý...' : '🚀 Hoàn Tất & Đặt Hàng'}
+              {loading ? 'Đang xử lý đơn hàng...' : 'Xác nhận đặt hàng'}
             </button>
           </div>
         </form>

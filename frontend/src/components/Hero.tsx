@@ -2,124 +2,205 @@ import React from 'react';
 
 export const Hero: React.FC = () => {
   return (
-    <div style={{
-      margin: '32px 0 40px 0',
-      borderRadius: 'var(--radius-xl)',
-      background: 'linear-gradient(135deg, rgba(19, 27, 46, 0.85) 0%, rgba(11, 15, 25, 0.95) 100%)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      boxShadow: 'var(--shadow-lg), 0 0 50px rgba(99, 102, 241, 0.15)',
-      position: 'relative',
-      overflow: 'hidden',
-      padding: '52px 48px',
-    }}>
-      {/* Dynamic Ambient Glow Orbs */}
-      <div style={{
-        position: 'absolute', top: '-120px', right: '10%', width: '380px', height: '380px',
-        background: 'radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, rgba(236, 72, 153, 0.05) 60%, transparent 80%)',
-        borderRadius: '50%', pointerEvents: 'none', filter: 'blur(30px)'
-      }} />
-      <div style={{
-        position: 'absolute', bottom: '-100px', left: '5%', width: '300px', height: '300px',
-        background: 'radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%)',
-        borderRadius: '50%', pointerEvents: 'none', filter: 'blur(25px)'
-      }} />
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '40px', alignItems: 'center', position: 'relative', zIndex: 2 }}>
+    <section
+      style={{
+        margin: '28px 0 44px 0',
+        padding: '48px 40px',
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-subtle)',
+        borderRadius: 'var(--radius-lg)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1.15fr 0.85fr',
+          gap: '48px',
+          alignItems: 'center',
+          position: 'relative',
+          zIndex: 2,
+        }}
+      >
+        {/* Left Editorial Copy */}
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: 'var(--radius-full)', background: 'rgba(99, 102, 241, 0.15)', border: '1px solid rgba(99, 102, 241, 0.3)', marginBottom: '20px' }}>
-            <span style={{ fontSize: '0.9rem' }}>✨</span>
-            <span style={{ fontSize: '0.82rem', fontWeight: '700', color: '#a5b4fc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Next-Gen Cloud E-Commerce 2026
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '4px 12px',
+              borderRadius: 'var(--radius-xs)',
+              background: 'var(--bg-subtle)',
+              border: '1px solid var(--border-subtle)',
+              marginBottom: '20px',
+            }}
+          >
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                background: 'var(--accent-primary)',
+                display: 'inline-block',
+              }}
+            />
+            <span
+              style={{
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                color: 'var(--text-secondary)',
+                letterSpacing: '0.02em',
+              }}
+            >
+              Bộ sưu tập công nghệ chọn lọc 2026
             </span>
           </div>
 
-          <h1 style={{ fontSize: '3.2rem', lineHeight: '1.15', marginBottom: '18px', fontWeight: '800' }}>
-            Khám Phá Công Nghệ <br />
-            <span className="gradient-text">Đỉnh Cao & Đẳng Cấp</span>
+          <h1
+            style={{
+              fontSize: 'clamp(2.2rem, 4vw, 3.4rem)',
+              lineHeight: '1.12',
+              marginBottom: '20px',
+              fontWeight: 700,
+              fontFamily: 'var(--font-heading)',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.035em',
+            }}
+          >
+            Thiết bị chuẩn xác cho không gian làm việc hiện đại
           </h1>
 
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '32px', lineHeight: '1.7', maxWidth: '560px' }}>
-            Trải nghiệm mua sắm siêu tốc được hỗ trợ bởi hệ sinh thái <strong>Spring Boot 3.x</strong> và cơ sở dữ liệu phân tán <strong>Neon PostgreSQL</strong>.
+          <p
+            style={{
+              color: 'var(--text-secondary)',
+              fontSize: '1.05rem',
+              lineHeight: '1.65',
+              marginBottom: '32px',
+              maxWidth: '540px',
+            }}
+          >
+            Tuyển chọn âm thanh phòng thu, bàn phím cơ khí và phụ kiện máy tính hoàn thiện tinh xảo. Vận hành trên hạ tầng đám mây đồng bộ tức thì.
           </p>
 
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
             <a
               href="#products-section"
               className="btn btn-primary"
-              style={{ borderRadius: 'var(--radius-full)', padding: '14px 34px', fontSize: '1.05rem', fontWeight: '700' }}
+              style={{ padding: '12px 28px', fontSize: '0.92rem' }}
             >
-              🔥 Khám Phá Bộ Sưu Tập
+              Xem danh mục sản phẩm
             </a>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '0.92rem' }}>
-              <span>⭐ Đánh giá 4.9/5 từ hơn 10.000+ khách hàng</span>
-            </div>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              Bảo hành 1 đổi 1 trong 30 ngày
+            </span>
           </div>
 
-          {/* Value Propositions */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginTop: '36px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '24px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>⚡</div>
-              <div>
-                <div style={{ fontWeight: '700', fontSize: '0.9rem' }}>Giao Siêu Tốc 2H</div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Nội thành TP.HCM & HN</div>
+          {/* Precision Spec Pillars */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '16px',
+              marginTop: '40px',
+              paddingTop: '24px',
+              borderTop: '1px solid var(--border-subtle)',
+            }}
+          >
+            <div>
+              <div style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text-primary)', marginBottom: '2px' }}>
+                Giao hàng 2H
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                Nội thành Hà Nội & TP.HCM
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🛡️</div>
-              <div>
-                <div style={{ fontWeight: '700', fontSize: '0.9rem' }}>Bảo Hành 100%</div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Chính hãng & 1 Đổi 1</div>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text-primary)', marginBottom: '2px' }}>
+                100% Chính hãng
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                CO/CQ và hóa đơn VAT đầy đủ
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(236, 72, 153, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>💳</div>
-              <div>
-                <div style={{ fontWeight: '700', fontSize: '0.9rem' }}>Trả Góp 0%</div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Qua thẻ tín dụng / COD</div>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text-primary)', marginBottom: '2px' }}>
+                Kỹ thuật viên 24/7
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                Hỗ trợ cấu hình tận nơi
               </div>
             </div>
           </div>
         </div>
 
-        {/* Floating Featured Product Cards Mockup */}
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{
-            position: 'relative', width: '280px', height: '340px',
-            borderRadius: 'var(--radius-lg)', overflow: 'hidden',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            boxShadow: 'var(--shadow-lg), 0 0 30px rgba(99, 102, 241, 0.25)',
-            transform: 'rotate(-4deg)', transition: 'transform 0.4s ease'
-          }}>
-            <img
-              src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
-              alt="Wireless Headphones"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-            <div style={{ position: 'absolute', bottom: 0, insetInline: 0, padding: '16px', background: 'linear-gradient(to top, rgba(15, 23, 42, 0.95), transparent)' }}>
-              <span className="badge badge-sale" style={{ marginBottom: '4px' }}>🔥 HOT DEAL</span>
-              <div style={{ fontWeight: '700', fontSize: '0.95rem' }}>Âm Thanh Không Dây Cao Cấp</div>
+        {/* Right Studio Showcase Card */}
+        <div style={{ position: 'relative' }}>
+          <div
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-medium)',
+              borderRadius: 'var(--radius-md)',
+              overflow: 'hidden',
+              boxShadow: 'var(--shadow-card-hover)',
+            }}
+          >
+            {/* Image Stage */}
+            <div style={{ position: 'relative', height: '340px', background: '#080a0f', overflow: 'hidden' }}>
+              <img
+                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80"
+                alt="Studio High-Fidelity Headphones"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  filter: 'contrast(1.05)',
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '16px',
+                  left: '16px',
+                  display: 'flex',
+                  gap: '8px',
+                }}
+              >
+                <span className="badge badge-accent">Tiêu điểm tháng</span>
+              </div>
             </div>
-          </div>
 
-          <div style={{
-            position: 'absolute', right: '-10px', top: '30px', width: '220px', height: '280px',
-            borderRadius: 'var(--radius-lg)', overflow: 'hidden',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: 'var(--shadow-lg), 0 0 35px rgba(236, 72, 153, 0.3)',
-            transform: 'rotate(6deg)', zIndex: 3
-          }}>
-            <img
-              src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80"
-              alt="Smart Watch"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-            <div style={{ position: 'absolute', bottom: 0, insetInline: 0, padding: '12px', background: 'linear-gradient(to top, rgba(15, 23, 42, 0.95), transparent)' }}>
-              <span className="badge badge-hot" style={{ marginBottom: '4px' }}>-25% GIẢM</span>
-              <div style={{ fontWeight: '700', fontSize: '0.88rem' }}>Smartwatch Pro Series 9</div>
+            {/* Spec Footnote */}
+            <div
+              style={{
+                padding: '20px 24px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                background: 'var(--bg-subtle)',
+                borderTop: '1px solid var(--border-subtle)',
+              }}
+            >
+              <div>
+                <h4 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                  Tai nghe Studio Monitor Pro
+                </h4>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                  Driver Planar Magnetic 50mm · Khử ồn chủ động
+                </p>
+              </div>
+              <a
+                href="#products-section"
+                className="btn btn-secondary"
+                style={{ fontSize: '0.82rem', padding: '8px 14px' }}
+              >
+                Chi tiết
+              </a>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };

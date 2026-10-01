@@ -27,119 +27,213 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { itemCount } = useCart();
 
   return (
-    <nav className="glass-nav" style={{ position: 'sticky', top: 0, zIndex: 900, padding: '16px 0' }}>
-      <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px' }}>
-        {/* Brand Logo with Glow */}
+    <header className="glass-nav" style={{ position: 'sticky', top: 0, zIndex: 900 }}>
+      <div
+        className="app-container"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '68px',
+          gap: '24px',
+        }}
+      >
+        {/* Brand Identity */}
         <div
           style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', userSelect: 'none' }}
           onClick={() => setActiveView('home')}
         >
-          <div style={{
-            width: '44px', height: '44px', borderRadius: '14px',
-            background: 'var(--accent-gradient)', display: 'flex',
-            alignItems: 'center', justifyContent: 'center', fontWeight: '900',
-            fontSize: '1.45rem', color: '#fff', boxShadow: 'var(--shadow-glow)',
-            transform: 'rotate(-4deg)', transition: 'transform 0.3s ease'
-          }}>
-            ⚡
+          <div
+            style={{
+              width: '34px',
+              height: '34px',
+              borderRadius: 'var(--radius-sm)',
+              background: 'var(--bg-subtle)',
+              border: '1px solid var(--border-medium)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--accent-primary)',
+              fontWeight: 800,
+              fontSize: '1rem',
+              fontFamily: 'var(--font-heading)',
+              letterSpacing: '-0.05em',
+            }}
+          >
+            NS
           </div>
-          <div>
-            <span style={{ fontSize: '1.4rem', fontWeight: '800', fontFamily: 'var(--font-display)', letterSpacing: '-0.03em' }} className="gradient-text">
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span
+              style={{
+                fontSize: '1.2rem',
+                fontWeight: 700,
+                fontFamily: 'var(--font-heading)',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.1,
+                color: 'var(--text-primary)',
+              }}
+            >
               NeoStore
             </span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.68rem', color: 'var(--text-dim)', letterSpacing: '0.08em', fontWeight: '700' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-emerald)', display: 'inline-block', boxShadow: '0 0 8px #10b981' }} />
-              CLOUD POWERED
+            <span
+              style={{
+                fontSize: '0.68rem',
+                color: 'var(--text-muted)',
+                fontWeight: 500,
+                letterSpacing: '0.04em',
+              }}
+            >
+              Hardware & Tech
             </span>
           </div>
         </div>
 
-        {/* Dynamic Search Bar */}
-        <div style={{ flex: 1, maxWidth: '520px', position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', fontSize: '1.1rem', color: 'var(--text-dim)', pointerEvents: 'none' }}>
-            🔍
-          </span>
+        {/* Command Search Bar */}
+        <div style={{ flex: 1, maxWidth: '440px', position: 'relative' }}>
+          <svg
+            style={{
+              position: 'absolute',
+              left: '14px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '16px',
+              height: '16px',
+              color: 'var(--text-dim)',
+              pointerEvents: 'none',
+            }}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
           <input
             type="text"
             className="form-input"
-            placeholder="Tìm kiếm điện thoại, laptop, thời trang, phụ kiện..."
+            placeholder="Tìm kiếm thiết bị, thông số, phụ kiện..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
             style={{
-              borderRadius: 'var(--radius-full)',
-              paddingLeft: '46px',
-              paddingRight: searchTerm ? '40px' : '16px',
-              background: 'rgba(15, 23, 42, 0.7)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              fontSize: '0.92rem'
+              paddingLeft: '40px',
+              paddingRight: searchTerm ? '38px' : '14px',
+              fontSize: '0.88rem',
+              height: '40px',
+              borderRadius: 'var(--radius-sm)',
             }}
           />
           {searchTerm && (
             <button
               onClick={() => onSearchChange('')}
               style={{
-                position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
-                background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '0.9rem'
+                position: 'absolute',
+                right: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: 'var(--text-muted)',
+                fontSize: '0.85rem',
+                padding: '4px',
               }}
+              aria-label="Xóa từ khóa"
             >
               ✕
             </button>
           )}
         </div>
 
-        {/* Action Controls & Navigation */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {/* Navigation Pill Links */}
-          <button
-            className={`btn ${activeView === 'home' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ borderRadius: 'var(--radius-full)', padding: '9px 18px', fontSize: '0.9rem' }}
-            onClick={() => setActiveView('home')}
+        {/* Nav Views & User Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* View switcher */}
+          <div
+            style={{
+              display: 'flex',
+              background: 'var(--bg-subtle)',
+              padding: '3px',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-subtle)',
+            }}
           >
-            🏠 Khám Phá
-          </button>
-
-          {user && (
             <button
-              className={`btn ${activeView === 'orders' ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ borderRadius: 'var(--radius-full)', padding: '9px 18px', fontSize: '0.9rem' }}
+              className="btn"
+              style={{
+                padding: '6px 14px',
+                fontSize: '0.82rem',
+                borderRadius: 'var(--radius-xs)',
+                background: activeView === 'home' ? 'var(--bg-surface)' : 'transparent',
+                color: activeView === 'home' ? 'var(--text-primary)' : 'var(--text-muted)',
+                boxShadow: activeView === 'home' ? 'var(--shadow-sm)' : 'none',
+              }}
+              onClick={() => setActiveView('home')}
+            >
+              Cửa hàng
+            </button>
+
+            <button
+              className="btn"
+              style={{
+                padding: '6px 14px',
+                fontSize: '0.82rem',
+                borderRadius: 'var(--radius-xs)',
+                background: activeView === 'orders' ? 'var(--bg-surface)' : 'transparent',
+                color: activeView === 'orders' ? 'var(--text-primary)' : 'var(--text-muted)',
+                boxShadow: activeView === 'orders' ? 'var(--shadow-sm)' : 'none',
+              }}
               onClick={() => {
                 setActiveView('orders');
                 onOpenOrders();
               }}
             >
-              📦 Đơn Hàng
+              Đơn hàng
             </button>
-          )}
 
-          {isAdmin && (
-            <button
-              className={`btn ${activeView === 'admin' ? 'btn-primary' : 'btn-secondary'}`}
-              style={{
-                borderRadius: 'var(--radius-full)', padding: '9px 18px', fontSize: '0.9rem',
-                border: activeView === 'admin' ? 'none' : '1px solid rgba(245, 158, 11, 0.4)',
-                color: activeView === 'admin' ? '#fff' : '#f59e0b'
-              }}
-              onClick={() => {
-                setActiveView('admin');
-                onOpenAdmin();
-              }}
-            >
-              ⚡ Quản Trị
-            </button>
-          )}
+            {isAdmin && (
+              <button
+                className="btn"
+                style={{
+                  padding: '6px 14px',
+                  fontSize: '0.82rem',
+                  borderRadius: 'var(--radius-xs)',
+                  background: activeView === 'admin' ? 'var(--accent-primary)' : 'transparent',
+                  color: activeView === 'admin' ? '#0a0d14' : 'var(--accent-primary)',
+                  fontWeight: 700,
+                }}
+                onClick={() => {
+                  setActiveView('admin');
+                  onOpenAdmin();
+                }}
+              >
+                Quản trị
+              </button>
+            )}
+          </div>
 
           {/* Cart Trigger */}
           <button
             className="btn btn-secondary"
-            style={{ position: 'relative', borderRadius: 'var(--radius-full)', padding: '9px 18px' }}
+            style={{
+              position: 'relative',
+              height: '38px',
+              padding: '0 14px',
+              gap: '6px',
+            }}
             onClick={onOpenCart}
           >
-            🛒 Giỏ Hàng
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <span style={{ fontSize: '0.84rem' }}>Giỏ hàng</span>
             {itemCount > 0 && (
-              <span className="badge badge-sale" style={{
-                position: 'absolute', top: '-6px', right: '-6px',
-                padding: '2px 8px', fontSize: '0.72rem', fontWeight: '800'
-              }}>
+              <span
+                style={{
+                  background: 'var(--accent-primary)',
+                  color: '#0a0d14',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  borderRadius: 'var(--radius-pill)',
+                  padding: '1px 6px',
+                  minWidth: '18px',
+                  textAlign: 'center',
+                }}
+              >
                 {itemCount}
               </span>
             )}
@@ -147,34 +241,44 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* User Profile or Login */}
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.04)', padding: '4px 6px 4px 14px', borderRadius: 'var(--radius-full)', border: '1px solid var(--border-glass)' }}>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-main)', lineHeight: 1.2 }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '4px 6px 4px 12px',
+                background: 'var(--bg-subtle)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-sm)',
+              }}
+            >
+              <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
+                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                   {user.fullName || user.username}
                 </div>
-                <div style={{ fontSize: '0.72rem', color: isAdmin ? 'var(--warning)' : 'var(--text-dim)', fontWeight: '600' }}>
-                  {isAdmin ? '🛡️ Administrator' : '💎 Khách hàng VIP'}
+                <div style={{ fontSize: '0.68rem', color: isAdmin ? 'var(--accent-primary)' : 'var(--text-dim)' }}>
+                  {isAdmin ? 'Quản trị viên' : 'Thành viên'}
                 </div>
               </div>
               <button
-                className="btn btn-danger"
-                style={{ borderRadius: 'var(--radius-full)', padding: '6px 14px', fontSize: '0.8rem' }}
+                className="btn btn-ghost"
+                style={{ padding: '4px 8px', fontSize: '0.78rem' }}
                 onClick={logout}
               >
-                Đăng Xuất
+                Thoát
               </button>
             </div>
           ) : (
             <button
               className="btn btn-primary"
-              style={{ borderRadius: 'var(--radius-full)', padding: '9px 22px' }}
+              style={{ height: '38px', padding: '0 16px', fontSize: '0.86rem' }}
               onClick={onOpenAuth}
             >
-              🔑 Đăng Nhập
+              Đăng nhập
             </button>
           )}
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
