@@ -97,11 +97,21 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Split comma-separated origins from env var / application.yml
-        List<String> origins = Arrays.stream(allowedOrigins.split(","))
-                .map(String::trim)
-                .toList();
-        configuration.setAllowedOrigins(origins);
+        // Build list: env var (comma-separated) + always-allow deployment patterns
+        List<String> origins = new java.util.ArrayList<>(Arrays.asList(
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "https://*.vercel.app",      // all Vercel preview & production
+                "https://*.onrender.com"     // all Render frontend services
+        ));
+        // Append extra origins from ALLOWED_ORIGINS env var (e.g. custom domain)
+        if (allowedOrigins != null && !allowedOrigins.isBlank()) {
+            Arrays.stream(allowedOrigins.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .forEach(origins::add);
+        }
+        configuration.setAllowedOriginPatterns(origins);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
