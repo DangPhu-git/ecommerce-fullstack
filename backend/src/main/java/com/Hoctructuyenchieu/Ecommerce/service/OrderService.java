@@ -14,4 +14,6 @@ public interface OrderService {
     Order getOrderById(Long id);
 
     Order updateOrderStatus(Long id, OrderDto.UpdateStatusRequest request);
+
+    Order cancelOrder(Long id, String username);
 }

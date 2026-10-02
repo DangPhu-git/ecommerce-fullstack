@@ -1,7 +1,6 @@
-import type { Cart, Category, Order, Product, User } from '../types';
+import type { Cart, Category, Order, Product, User, PageResponse } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const getHeaders = (token?: string | null): HeadersInit => {
   const headers: HeadersInit = {
@@ -70,15 +69,33 @@ export const api = {
   },
 
   // Products
-  async getProducts(keyword?: string, categoryId?: number) {
+  async getProducts(
+    keyword?: string,
+    categoryId?: number,
+    page: number = 0,
+    size: number = 12
+  ) {
     const params = new URLSearchParams();
-    if (keyword) params.append('keyword', keyword);
-    if (categoryId) params.append('categoryId', categoryId.toString());
 
-    const res = await fetch(`${API_BASE}/products?${params.toString()}`, {
-      headers: getHeaders(),
-    });
-    return handleResponse<Product[]>(res);
+    if (keyword) {
+      params.append('keyword', keyword);
+    }
+
+    if (categoryId) {
+      params.append('categoryId', categoryId.toString());
+    }
+
+    params.append('page', page.toString());
+    params.append('size', size.toString());
+
+    const res = await fetch(
+      `${API_BASE}/products?${params.toString()}`,
+      {
+        headers: getHeaders(),
+      }
+    );
+
+    return handleResponse<PageResponse<Product>>(res);
   },
 
   async getFeaturedProducts() {
@@ -179,5 +196,29 @@ export const api = {
       body: JSON.stringify({ status, paymentStatus }),
     });
     return handleResponse<Order>(res);
+  },
+
+  async cancelOrder(id: number) {
+    const res = await fetch(`${API_BASE}/orders/${id}/cancel`, {
+      method: 'POST',
+      headers: getHeaders(),
+    });
+    return handleResponse<Order>(res);
+  },
+
+  // Payment (VNPay)
+  async createVNPayUrl(orderId: number) {
+    const res = await fetch(`${API_BASE}/payment/vnpay-url/${orderId}`, {
+      headers: getHeaders(),
+    });
+    return handleResponse<{ paymentUrl: string; orderId: number; orderNumber: string }>(res);
+  },
+
+  async processVNPayCallback(queryParams: Record<string, string>) {
+    const search = new URLSearchParams(queryParams).toString();
+    const res = await fetch(`${API_BASE}/payment/vnpay-callback?${search}`, {
+      headers: getHeaders(),
+    });
+    return handleResponse<{ orderNumber: string; transactionNo: string; amount: number; status: string; message: string }>(res);
   }
 };

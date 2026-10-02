@@ -13,6 +13,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({ onOpenAuth, onGoToAdmin 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState<number | null>(null);
 
   const fetchOrders = async () => {
     if (!user) {
@@ -29,6 +30,35 @@ export const OrdersView: React.FC<OrdersViewProps> = ({ onOpenAuth, onGoToAdmin 
       setError(err.message || 'Không thể nạp dữ liệu đơn hàng');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePayOrder = async (orderId: number) => {
+    try {
+      setActionLoading(orderId);
+      const res = await api.createVNPayUrl(orderId);
+      if (res && res.paymentUrl) {
+        window.location.href = res.paymentUrl;
+      }
+    } catch (err: any) {
+      alert(err.message || 'Không thể tạo liên kết thanh toán VNPay');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleCancelOrder = async (orderId: number) => {
+    if (!window.confirm('Bạn có chắc chắn muốn hủy đơn hàng này không? Số lượng sản phẩm sẽ được hoàn lại vào kho.')) {
+      return;
+    }
+    try {
+      setActionLoading(orderId);
+      await api.cancelOrder(orderId);
+      await fetchOrders();
+    } catch (err: any) {
+      alert(err.message || 'Hủy đơn hàng thất bại');
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -54,6 +84,19 @@ export const OrdersView: React.FC<OrdersViewProps> = ({ onOpenAuth, onGoToAdmin 
         return <span className="badge badge-sale">Đã hủy</span>;
       default:
         return <span className="badge badge-neutral">{status}</span>;
+    }
+  };
+
+  const getPaymentStatusBadge = (status: string) => {
+    switch (status) {
+      case 'PAID':
+        return <span className="badge badge-success" style={{ fontSize: '0.72rem' }}>Đã thanh toán</span>;
+      case 'UNPAID':
+        return <span className="badge badge-warning" style={{ fontSize: '0.72rem' }}>Chưa thanh toán</span>;
+      case 'FAILED':
+        return <span className="badge badge-sale" style={{ fontSize: '0.72rem' }}>Thanh toán lỗi</span>;
+      default:
+        return null;
     }
   };
 
@@ -248,7 +291,10 @@ export const OrdersView: React.FC<OrdersViewProps> = ({ onOpenAuth, onGoToAdmin 
                     {new Date(order.createdAt).toLocaleString('vi-VN')}
                   </span>
                 </div>
-                <div>{getStatusBadge(order.status)}</div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  {getPaymentStatusBadge(order.paymentStatus)}
+                  {getStatusBadge(order.status)}
+                </div>
               </div>
 
               {/* Order Items */}
@@ -324,18 +370,43 @@ export const OrdersView: React.FC<OrdersViewProps> = ({ onOpenAuth, onGoToAdmin 
                 <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
                   Giao đến: <strong style={{ color: 'var(--text-secondary)' }}>{order.recipientName}</strong> ({order.phone}) · {order.shippingAddress}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Tổng thanh toán:</span>
-                  <span
-                    style={{
-                      fontSize: '1.2rem',
-                      fontWeight: 700,
-                      color: 'var(--text-primary)',
-                      fontFamily: 'var(--font-heading)',
-                    }}
-                  >
-                    {formatVND(order.totalAmount)}
-                  </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Tổng thanh toán:</span>
+                    <span
+                      style={{
+                        fontSize: '1.2rem',
+                        fontWeight: 700,
+                        color: 'var(--text-primary)',
+                        fontFamily: 'var(--font-heading)',
+                      }}
+                    >
+                      {formatVND(order.totalAmount)}
+                    </span>
+                  </div>
+
+                  {order.status === 'PENDING' && (
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {order.paymentStatus !== 'PAID' && (
+                        <button
+                          className="btn btn-primary"
+                          style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+                          disabled={actionLoading === order.id}
+                          onClick={() => handlePayOrder(order.id)}
+                        >
+                          {actionLoading === order.id ? 'Đang mở VNPay...' : '💳 Thanh toán VNPay'}
+                        </button>
+                      )}
+                      <button
+                        className="btn btn-secondary"
+                        style={{ padding: '6px 12px', fontSize: '0.82rem', color: '#f87171' }}
+                        disabled={actionLoading === order.id}
+                        onClick={() => handleCancelOrder(order.id)}
+                      >
+                        {actionLoading === order.id ? '...' : 'Hủy đơn'}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

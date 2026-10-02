@@ -2,12 +2,13 @@ package com.Hoctructuyenchieu.Ecommerce.service;
 
 import com.Hoctructuyenchieu.Ecommerce.entity.Product;
 import com.Hoctructuyenchieu.Ecommerce.web.dto.ProductRequest;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
-    List<Product> getAllProducts(String keyword, Long categoryId);
+    Page<Product> getAllProducts(String keyword, Long categoryId, Pageable pageable);
 
-    List<Product> getFeaturedProducts();
+    Page<Product> getFeaturedProducts(Pageable pageable);
 
     Product getProductById(Long id);
 

@@ -29,7 +29,7 @@ export const AdminView: React.FC = () => {
         api.getCategories(),
         api.getAllOrders(),
       ]);
-      setProducts(pData);
+      setProducts(pData.content);
       setCategories(cData);
       setOrders(oData);
     } catch (err) {

@@ -8,11 +8,12 @@ import { Navbar } from './components/Navbar';
 import { OrdersView } from './components/OrdersView';
 import { ProductCard } from './components/ProductCard';
 import { ProductDetailModal } from './components/ProductDetailModal';
+import { PaymentResultModal } from './components/PaymentResultModal';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider, useCart } from './context/CartContext';
 import { api } from './services/api';
 
-import type { Category, Product } from './types';
+import type { Category, Product, PaymentCallbackResult } from './types';
 
 const MainContent: React.FC = () => {
   const { toastMessage } = useCart();
@@ -29,22 +30,65 @@ const MainContent: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [paymentResult, setPaymentResult] = useState<PaymentCallbackResult | null>(null);
+
+  // VNPay callback detection
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('vnp_ResponseCode') && urlParams.has('vnp_TxnRef')) {
+      const queryObj: Record<string, string> = {};
+      urlParams.forEach((val, key) => {
+        queryObj[key] = val;
+      });
+
+      api.processVNPayCallback(queryObj)
+        .then((res) => {
+          setPaymentResult(res as PaymentCallbackResult);
+          setActiveView('orders');
+          window.history.replaceState({}, document.title, window.location.pathname);
+        })
+        .catch((err) => {
+          setPaymentResult({
+            orderNumber: urlParams.get('vnp_TxnRef') || '',
+            transactionNo: urlParams.get('vnp_TransactionNo') || '',
+            amount: 0,
+            status: 'FAILED',
+            message: err.message || 'Xác thực thanh toán thất bại',
+          });
+          window.history.replaceState({}, document.title, window.location.pathname);
+        });
+    }
+  }, []);
 
   // Data
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [page, setPage] = useState(0);
+  const [size] = useState(12);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+
         const [cData, pData] = await Promise.all([
           api.getCategories(),
-          api.getProducts(searchTerm, selectedCategory || undefined),
+          api.getProducts(
+            searchTerm,
+            selectedCategory || undefined,
+            page,
+            size
+          ),
         ]);
+
         setCategories(cData);
-        setProducts(pData);
+        setProducts(pData.content);
+        setTotalPages(pData.totalPages);
+        setTotalItems(pData.totalElements);
       } catch (err) {
         console.error('Error fetching catalog data:', err);
       } finally {
@@ -53,6 +97,10 @@ const MainContent: React.FC = () => {
     };
 
     fetchData();
+  }, [searchTerm, selectedCategory, page, size]);
+
+  useEffect(() => {
+    setPage(0);
   }, [searchTerm, selectedCategory]);
 
   // Reset view only if logging out while viewing admin panel
@@ -65,14 +113,35 @@ const MainContent: React.FC = () => {
   }, [user, activeView]);
 
   // Sort products logic
-  const sortedProducts = [...products].sort((a, b) => {
-    const priceA = a.discountPrice || a.price;
-    const priceB = b.discountPrice || b.price;
-    if (sortBy === 'price-asc') return priceA - priceB;
-    if (sortBy === 'price-desc') return priceB - priceA;
-    if (sortBy === 'name') return a.name.localeCompare(b.name);
-    return 0;
-  });
+  // const sortedProducts = [...products].sort((a, b) => {
+  //   const priceA = a.discountPrice || a.price;
+  //   const priceB = b.discountPrice || b.price;
+  //   if (sortBy === 'price-asc') return priceA - priceB;
+  //   if (sortBy === 'price-desc') return priceB - priceA;
+  //   if (sortBy === 'name') return a.name.localeCompare(b.name);
+  //   return 0;
+  // });
+
+  // Pagination: generate page numbers with ellipsis
+  const getPageNumbers = (): (number | '...')[] => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i);
+    }
+    const delta = 2;
+    const left = Math.max(0, page - delta);
+    const right = Math.min(totalPages - 1, page + delta);
+    const pages: (number | '...')[] = [];
+    if (left > 0) {
+      pages.push(0);
+      if (left > 1) pages.push('...');
+    }
+    for (let i = left; i <= right; i++) pages.push(i);
+    if (right < totalPages - 1) {
+      if (right < totalPages - 2) pages.push('...');
+      pages.push(totalPages - 1);
+    }
+    return pages;
+  };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -154,7 +223,7 @@ const MainContent: React.FC = () => {
                 {/* Counter & Sorting Filter */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                   <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                    {sortedProducts.length} sản phẩm
+                    {totalItems} sản phẩm
                   </span>
                   <select
                     className="form-select"
@@ -194,7 +263,7 @@ const MainContent: React.FC = () => {
                 />
                 <p style={{ fontSize: '0.88rem' }}>Đang nạp dữ liệu danh mục...</p>
               </div>
-            ) : sortedProducts.length === 0 ? (
+            ) : products.length === 0 ? (
               <div
                 className="glass-panel"
                 style={{
@@ -240,7 +309,7 @@ const MainContent: React.FC = () => {
               </div>
             ) : (
               <div className="grid-products">
-                {sortedProducts.map((prod) => (
+                {products.map((prod) => (
                   <ProductCard
                     key={prod.id}
                     product={prod}
@@ -248,6 +317,54 @@ const MainContent: React.FC = () => {
                   />
                 ))}
               </div>
+            )}
+
+            {/* Pagination */}
+            {!loading && totalPages > 1 && (
+              <nav className="pagination" aria-label="Phân trang sản phẩm">
+                {/* Prev button */}
+                <button
+                  className="pagination-btn nav"
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  aria-label="Trang trước"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Trước
+                </button>
+
+                {/* Page numbers */}
+                {getPageNumbers().map((p, idx) =>
+                  p === '...' ? (
+                    <span key={`ellipsis-${idx}`} className="pagination-ellipsis">···</span>
+                  ) : (
+                    <button
+                      key={p}
+                      className={`pagination-btn${page === p ? ' active' : ''}`}
+                      onClick={() => setPage(p as number)}
+                      aria-label={`Trang ${(p as number) + 1}`}
+                      aria-current={page === p ? 'page' : undefined}
+                    >
+                      {(p as number) + 1}
+                    </button>
+                  )
+                )}
+
+                {/* Next button */}
+                <button
+                  className="pagination-btn nav"
+                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                  disabled={page >= totalPages - 1}
+                  aria-label="Trang sau"
+                >
+                  Sau
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </nav>
             )}
           </>
         )}
@@ -335,6 +452,12 @@ const MainContent: React.FC = () => {
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
+      />
+
+      <PaymentResultModal
+        isOpen={!!paymentResult}
+        result={paymentResult}
+        onClose={() => setPaymentResult(null)}
       />
 
       {/* Global Toast Alert */}

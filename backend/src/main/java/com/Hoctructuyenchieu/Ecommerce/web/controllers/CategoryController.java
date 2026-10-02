@@ -6,6 +6,7 @@ import com.Hoctructuyenchieu.Ecommerce.service.CategoryService;
 import com.Hoctructuyenchieu.Ecommerce.web.dto.CategoryRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,17 +31,20 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Category>> createCategory(@Valid @RequestBody CategoryRequest request) {
-        return ResponseEntity.ok(ApiResponse.success(categoryService.createCategory(request), "Created category"));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(categoryService.createCategory(request), "Danh mục đã được tạo thành công"));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Category>> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest request) {
-        return ResponseEntity.ok(ApiResponse.success(categoryService.updateCategory(id, request), "Updated category"));
+    public ResponseEntity<ApiResponse<Category>> updateCategory(@PathVariable Long id,
+            @Valid @RequestBody CategoryRequest request) {
+        return ResponseEntity
+                .ok(ApiResponse.success(categoryService.updateCategory(id, request), "Danh mục đã được cập nhật"));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.ok(ApiResponse.success(null, "Deleted category"));
+        return ResponseEntity.noContent().build();
     }
 }

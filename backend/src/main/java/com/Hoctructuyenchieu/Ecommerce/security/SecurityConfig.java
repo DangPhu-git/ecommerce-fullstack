@@ -63,17 +63,23 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/api/auth/**",
                                 "/api/health/**",
-                                "/error"
-                        ).permitAll()
+                                "/api/payment/vnpay-callback",
+                                "/error")
+                        .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/products/**", "/api/products", "/api/categories/**", "/api/categories").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/products/**", "/api/products", "/api/categories/**", "/api/categories").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/products/**", "/api/products", "/api/categories/**", "/api/categories").hasAuthority("ROLE_ADMIN")
-                        .anyRequest().authenticated()
-                );
+                        .requestMatchers(HttpMethod.POST, "/api/products/**", "/api/products", "/api/categories/**",
+                                "/api/categories")
+                        .hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/products/**", "/api/products", "/api/categories/**",
+                                "/api/categories")
+                        .hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/**", "/api/products", "/api/categories/**",
+                                "/api/categories")
+                        .hasAuthority("ROLE_ADMIN")
+                        .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -101,8 +107,8 @@ public class SecurityConfig {
         List<String> origins = new java.util.ArrayList<>(Arrays.asList(
                 "http://localhost:5173",
                 "http://localhost:3000",
-                "https://*.vercel.app",      // all Vercel preview & production
-                "https://*.onrender.com"     // all Render frontend services
+                "https://*.vercel.app", // all Vercel preview & production
+                "https://*.onrender.com" // all Render frontend services
         ));
         // Append extra origins from ALLOWED_ORIGINS env var (e.g. custom domain)
         if (allowedOrigins != null && !allowedOrigins.isBlank()) {

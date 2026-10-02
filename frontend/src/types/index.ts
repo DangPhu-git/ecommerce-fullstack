@@ -42,8 +42,23 @@ export interface Cart {
 }
 
 export type OrderStatus = 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
-export type PaymentMethod = 'COD' | 'BANK_TRANSFER' | 'CREDIT_CARD';
+export type PaymentMethod = 'COD' | 'BANK_TRANSFER' | 'CREDIT_CARD' | 'VNPAY';
 export type PaymentStatus = 'UNPAID' | 'PAID' | 'FAILED' | 'REFUNDED';
+
+export interface VNPayResponse {
+  paymentUrl: string;
+  orderId: number;
+  orderNumber: string;
+  message: string;
+}
+
+export interface PaymentCallbackResult {
+  orderNumber: string;
+  transactionNo: string;
+  amount: number;
+  status: 'SUCCESS' | 'FAILED' | 'INVALID_SIGNATURE';
+  message: string;
+}
 
 export interface OrderItem {
   id: number;
@@ -73,3 +88,17 @@ export interface ApiResponse<T> {
   data: T;
   timestamp: string;
 }
+
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+}
+
+export type ProductPageResponse =
+  ApiResponse<PageResponse<Product>>;

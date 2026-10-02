@@ -84,7 +84,8 @@ public class Order {
     public enum PaymentMethod {
         COD,
         BANK_TRANSFER,
-        CREDIT_CARD
+        CREDIT_CARD,
+        VNPAY
     }
 
     public enum PaymentStatus {

@@ -25,7 +25,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthDto.UserDto>> register(@Valid @RequestBody AuthDto.RegisterRequest registerRequest) {
         AuthDto.UserDto userDto = authService.register(registerRequest);
-        return ResponseEntity.ok(ApiResponse.success(userDto, "Registration successful"));
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED)
+                .body(ApiResponse.success(userDto, "Registration successful"));
     }
 
     @GetMapping("/me")

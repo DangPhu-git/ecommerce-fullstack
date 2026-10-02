@@ -3,6 +3,8 @@ package com.Hoctructuyenchieu.Ecommerce.service.impl;
 import com.Hoctructuyenchieu.Ecommerce.service.CategoryService;
 
 import com.Hoctructuyenchieu.Ecommerce.entity.Category;
+import com.Hoctructuyenchieu.Ecommerce.exception.ConflictException;
+import com.Hoctructuyenchieu.Ecommerce.exception.ResourceNotFoundException;
 import com.Hoctructuyenchieu.Ecommerce.repository.CategoryRepository;
 import com.Hoctructuyenchieu.Ecommerce.web.dto.CategoryRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +18,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    @Override
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
+    @Override
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", id));
     }
 
+    @Override
     public Category createCategory(CategoryRequest request) {
         if (categoryRepository.existsByName(request.getName())) {
-            throw new RuntimeException("Category already exists: " + request.getName());
+            throw new ConflictException("Danh mục đã tồn tại: " + request.getName());
         }
 
         String slug = request.getName().toLowerCase().replaceAll("[^a-z0-9]", "-");
@@ -42,6 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(category);
     }
 
+    @Override
     public Category updateCategory(Long id, CategoryRequest request) {
         Category category = getCategoryById(id);
         category.setName(request.getName());
@@ -51,7 +57,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(category);
     }
 
+    @Override
     public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Category", id);
+        }
         categoryRepository.deleteById(id);
     }
 }
